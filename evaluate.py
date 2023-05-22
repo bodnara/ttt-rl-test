@@ -69,14 +69,15 @@ def _restore_checkpoint_files(path: str, chkt: int, run_path: str, move_path: st
 
 
 RUNS = {
-    # run_path, MCTS simuls, arch, depth, width, uct_
+    ## run_path, MCTS simuls, arch, depth, width, uct_
+    "random": None,
     "warm-flower-18": ("logs/", "miba/ttt6x6/c13ng2xs", 50, "conv2d", 8, 256, 1.4),
     "hopeful-spaceship-20": ("logs/", "miba/ttt6x6/qolemwgq", 200, "resnet", 4, 256, 1.4)
 }
 
-MCTS_SIMULS = [0, 5, 10, 15, 20, 50, 120, 250, 500]
+MCTS_SIMULS = [0, 5, 10, 15, 20, 50, 120, 250]
 MCTS_RATE = 1.4
-GAMES = 50
+GAMES = 20
 
 
 @dataclass
@@ -95,7 +96,7 @@ def _eval():
     results = []
     game = pyspiel.load_game(_eval_config["game"])
 
-    for player_str in tqdm.tqdm(["random", *RUNS.keys()], desc="players"):
+    for player_str in tqdm.tqdm(RUNS.keys(), desc="players"):
         if player_str == "random":
             play_fn = lambda state: random.choice(state.legal_actions())
         else:
